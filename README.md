@@ -4,17 +4,13 @@
 
 #
 
-## IMPORTANT: I don't have time to imporove this app anymore. Only critical bugs will be fixed.
-
-#
-
 Free texture packer creates sprite sheets for you game or site. Rotation, trimming, multipacking, various export formats (json, xml, css, pixi.js, godot, phaser, cocos2d). Zip support. TinyPNG support. Split sheet tool.
 
 ![screenshot](https://free-tex-packer.com/wp-content/uploads/2019/01/screenshot.png)
 
 Homepage: [https://free-tex-packer.com](https://free-tex-packer.com)
 
-Web version: [https://free-tex-packer.com/app](https://free-tex-packer.com/app)
+Web version: [https://axeljaeger.github.io/free-tex-packer/](https://axeljaeger.github.io/free-tex-packer/)
 
 Desktop versions for win, mac, linux: [https://github.com/odrick/free-tex-packer/releases](https://github.com/odrick/free-tex-packer/releases)
 
@@ -25,6 +21,30 @@ Grunt plugin: [https://github.com/odrick/grunt-free-tex-packer](https://github.c
 Webpack plugin: [https://github.com/odrick/webpack-free-tex-packer](https://github.com/odrick/webpack-free-tex-packer)
 
 CLI: [https://github.com/odrick/free-tex-packer-cli](https://github.com/odrick/free-tex-packer-cli)
+
+## Development
+
+The web app requires Node.js 20.19 or newer.
+
+```sh
+npm install
+npm start
+```
+
+Create and preview the production build with:
+
+```sh
+npm run build
+npm run preview
+```
+
+The production artifact is written to `dist/web` and uses relative asset URLs, so it also works below a GitHub Pages repository path.
+
+## Deployment
+
+Pushes to `master` run `.github/workflows/deploy-pages.yml`. The workflow installs from `package-lock.json`, builds the web app, and deploys `dist/web` with GitHub's Pages actions. In the repository settings, set **Pages → Build and deployment → Source** to **GitHub Actions** once before the first deployment.
+
+The Electron application remains on its original Electron 4 toolchain under `electron/`. It needs a separate security-focused upgrade before it should be packaged again.
 
 # Custom templates
 Free texture packer uses [mustache](http://mustache.github.io/) template engine.

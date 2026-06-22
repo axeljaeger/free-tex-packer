@@ -1,6 +1,6 @@
 import Splitter from './Splitter';
 
-import plist from 'plist';
+import * as plist from 'plist';
 
 class UIKit extends Splitter {
     static check(data, cb) {
