@@ -1,78 +1,60 @@
 import Splitter from './Splitter';
 
-import xmlParser from 'xml2js';
-
 class XML extends Splitter {
     static check(data, cb) {
         try {
-            xmlParser.parseString(data, (err, atlas) => {
-                if(err) {
-                    cb(false);
-                    return;
-                }
-                
-                cb(atlas.TextureAtlas && Array.isArray(atlas.TextureAtlas.sprite));
-            });
+            const atlas = new DOMParser().parseFromString(data, 'application/xml');
+            const root = atlas.documentElement;
+            cb(root.nodeName === 'TextureAtlas' && root.querySelector('sprite') !== null);
         }
-        catch(e) {
+        catch (e) {
             cb(false);
         }
     }
 
     static split(data, options, cb) {
-        let res = [];
+        const res = [];
 
         try {
+            const atlas = new DOMParser().parseFromString(data, 'application/xml');
+            const list = atlas.documentElement.querySelectorAll('sprite');
 
-            xmlParser.parseString(data, (err, atlas) => {
-                if(err) {
-                    cb(res);
-                    return;
+            for (const element of list) {
+                const item = {};
+                for (const attribute of element.attributes) {
+                    item[attribute.name] = attribute.value;
                 }
 
-                let list = atlas.TextureAtlas.sprite;
-                
-                for(let item of list) {
-                    item = item['$'];
-
-                    item.x *= 1;
-                    item.y *= 1;
-                    item.w *= 1;
-                    item.h *= 1;
-                    item.oX *= 1;
-                    item.oY *= 1;
-                    item.oW *= 1;
-                    item.oH *= 1;
-
-                    let trimmed = item.w < item.oW || item.h < item.oH;
-                    
-                    res.push({
-                        name: Splitter.fixFileName(item.n),
-                        frame: {
-                            x: item.x,
-                            y: item.y,
-                            w: item.w,
-                            h: item.h
-                        },
-                        spriteSourceSize: {
-                            x: item.oX,
-                            y: item.oY,
-                            w: item.w,
-                            h: item.h
-                        },
-                        sourceSize: {
-                            w: item.oW,
-                            h: item.oH
-                        },
-                        rotated: item.r === 'y',
-                        trimmed: trimmed
-                    });
+                for (const name of ['x', 'y', 'w', 'h', 'oX', 'oY', 'oW', 'oH']) {
+                    item[name] = Number(item[name]);
                 }
-                
-                cb(res);
-            });
+
+                const trimmed = item.w < item.oW || item.h < item.oH;
+
+                res.push({
+                    name: Splitter.fixFileName(item.n),
+                    frame: {
+                        x: item.x,
+                        y: item.y,
+                        w: item.w,
+                        h: item.h
+                    },
+                    spriteSourceSize: {
+                        x: item.oX,
+                        y: item.oY,
+                        w: item.w,
+                        h: item.h
+                    },
+                    sourceSize: {
+                        w: item.oW,
+                        h: item.oH
+                    },
+                    rotated: item.r === 'y',
+                    trimmed: trimmed
+                });
+            }
         }
-        catch(e) {
+        catch (e) {
         }
 
         cb(res);
