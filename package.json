@@ -53,7 +53,8 @@
     "start": "vite --host 127.0.0.1 --port 4000",
     "build": "vite build",
     "build-web": "vite build",
-    "preview": "vite preview --host 127.0.0.1 --port 4000"
+    "preview": "vite preview --host 127.0.0.1 --port 4000",
+    "test": "vitest run"
   },
   "repository": {
     "type": "git",
@@ -94,6 +95,7 @@
   },
   "devDependencies": {
     "@vitejs/plugin-react": "6.0.2",
-    "vite": "8.0.16"
+    "vite": "8.0.16",
+    "vitest": "^4.1.9"
   }
 }
